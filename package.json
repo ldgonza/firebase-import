@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firestore-export-import": "^0.6.1"
+    "firestore-export-import": "^0.6.1",
+    "promise-fs": "^2.1.1",
+    "properties-reader": "^2.0.0"
   }
 }

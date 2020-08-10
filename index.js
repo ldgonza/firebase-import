@@ -1,34 +1,43 @@
+const propertiesReader = require('properties-reader');
 const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./serviceAccountKey.json');
+const fs = require('promise-fs');
 
+let properties = propertiesReader('application.properties');
 
-// In your index.js
+let file = properties.get('file.path');
+let serviceAccountPath = properties.get('service.account.path');
+let databaseUrl = properties.get('database.url');
+let chunkSize = properties.get('chunk.size');
 
-const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./gcloud-sa.json');
-
-
-// var admin = require("firebase-admin");
-
-// var serviceAccount = require("path/to/serviceAccountKey.json");
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: "https://simpli-2-sandbox-9c4f.firebaseio.com"
-// });
-
-
-let databaseURL = "https://simpli-2-sandbox-9c4f.firebaseio.com";
-
-// // Initiate Firebase App
-// // appName is optional, you can obmit it.
+// Process
 const appName = '[DEFAULT]';
-firestoreService.initializeApp(serviceAccount, databaseURL, appName);
+const serviceAccount = require(serviceAccountPath);
+firestoreService.initializeApp(serviceAccount, databaseUrl, appName);
 
-// firestoreService
-//   .backup('tracking_locations')
-//   .then((data) => console.log(JSON.stringify(data)));
+let fileDir = properties.get('file.dir');
+async function start() {
+  let  files = await fs.readdir(fileDir);
+  let chunks = chunkArray(files, chunkSize);
+  for(let chunk of chunks) {
+    await processFiles(chunk);
+  }
+}
 
-// Start importing your data
-// The array of date, location and reference fields are optional
-firestoreService.restore('data.json');
+async function processFiles(files){
+  let promises = files.map(async f => {
+    console.log("Restoring " + f);
+    await firestoreService.restore(file);
+    console.log("Done restoring " + f);
+  });
+  await Promise.all(promises);
+}
+
+function chunkArray(myArray, chunk_size){
+    var results = [];
+    while (myArray.length) {
+        results.push(myArray.splice(0, chunk_size));
+    }
+    return results;
+}
+
+start();
