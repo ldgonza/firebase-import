@@ -1,0 +1,5 @@
+service.account.path=./gcloud-sa.json
+chunk.size=1
+bucket.name=tracking-collections-export
+bucket.prefix=results/VehiclesDaily/
+bucket.delimiter=/
