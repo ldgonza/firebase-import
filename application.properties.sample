@@ -3,3 +3,4 @@ chunk.size=1
 bucket.name=tracking-collections-export
 bucket.prefix=results/VehiclesDaily/
 bucket.delimiter=/
+process.parallel=false

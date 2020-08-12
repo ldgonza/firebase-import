@@ -10,6 +10,7 @@ let chunkSize = properties.get('chunk.size');
 let bucketName = properties.get('bucket.name');
 let bucketPrefix = properties.get('bucket.prefix');
 let bucketDelimiter = properties.get('bucket.delimiter');
+let parallel = properties.get('process.parallel');
 
 // Process
 const appName = '[DEFAULT]';
@@ -28,8 +29,15 @@ async function processFile(f){
 }
 
 async function processFiles(files){
-  let promises = files.map(processFile);
-  await Promise.all(promises);
+  if(parallel === "true"){
+    let promises = files.map(processFile);
+    await Promise.all(promises);
+    return;
+  }
+
+  for(let file of files) {
+    await processFile(file);
+  }
 }
 
 // -------------------------------------
