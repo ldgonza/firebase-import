@@ -15,14 +15,21 @@ let parallel = properties.get('process.parallel');
 // Process
 const appName = '[DEFAULT]';
 const serviceAccount = require(serviceAccountPath);
+
+console.log(databaseUrl);
 firestoreService.initializeApp(serviceAccount, databaseUrl, appName);
 
 async function processFile(f){
   console.log("Restoring " + f.name);
   let contents = await f.download();
-  await firestoreService.restore(JSON.parse(contents));
+  let result = await firestoreService.restore(JSON.parse(contents));
+
+  if (typeof result === "undefined" || result.status !== true){
+    console.log("Error restoring file! " + f.name);
+    throw new Error("Error restoring file! " + f.name);
+  }
+
   console.log("Done restoring " + f.name);
-  
   console.log("Deleting " + f.name);
   await f.delete();
   console.log("Done Deleting " + f.name);
