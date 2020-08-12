@@ -35,7 +35,6 @@ async function processFiles(files){
 // -------------------------------------
 
 async function start() {
-
   let files;
   let finish = false;
   do {
@@ -50,21 +49,5 @@ async function start() {
     if(finish)
       console.log("Error detected! not fetching any more files");
   } while (! finish && (files.length > 0));
-
-  // let file = files[0];
-  // console.log((await file.download()) + "");
-  // await file.delete();
-  //    console.log("file err: "+err);  
-  //    console.log("file data: "+contents);   
-  // });
-  
-//x  console.log(await files[0].get())
-
-
-  // let  files = await fs.readdir(fileDir);
-  // let chunks = chunkArray(files, chunkSize);
-  // for(let chunk of chunks) {
-  //   await processFiles(chunk);
-  // }
 }
 start();
