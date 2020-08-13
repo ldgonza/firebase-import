@@ -5,7 +5,6 @@ const fs = require('promise-fs');
 
 let properties = propertiesReader('application.properties');
 let serviceAccountPath = properties.get('service.account.path');
-let databaseUrl = properties.get('database.url');
 let chunkSize = properties.get('chunk.size');
 let bucketName = properties.get('bucket.name');
 let bucketPrefix = properties.get('bucket.prefix');
@@ -16,7 +15,6 @@ let parallel = properties.get('process.parallel');
 const appName = '[DEFAULT]';
 const serviceAccount = require(serviceAccountPath);
 
-console.log(databaseUrl);
 firestoreService.initializeApp(serviceAccount, databaseUrl, appName);
 
 async function processFile(f){
