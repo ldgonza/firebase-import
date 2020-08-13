@@ -15,6 +15,7 @@ let parallel = properties.get('process.parallel');
 const appName = '[DEFAULT]';
 const serviceAccount = require(serviceAccountPath);
 
+let databaseUrl = "";
 firestoreService.initializeApp(serviceAccount, databaseUrl, appName);
 
 async function processFile(f){
