@@ -1,4 +1,5 @@
 const buckets = require('./buckets.js');
+const filterMine = require('./filterMine.js');
 const propertiesReader = require('properties-reader');
 const firestoreService = require('firestore-export-import');
 const fs = require('promise-fs');
@@ -48,11 +49,21 @@ async function processFiles(files){
 
 // -------------------------------------
 
+let mySlot = 0;
+let totalSlots = 1;
+
+if(process.argv.length >= 3) {
+  mySlot  = parseInt(process.argv[2]);
+  totalSlots  = parseInt(process.argv[3]);
+}
+
+const fileFetchSize = 50;
 async function start() {
   let files;
   let finish = false;
   do {
-    files = await buckets.listFilesByPrefix(bucketName, chunkSize, bucketPrefix, bucketDelimiter);
+    files = await buckets.listFilesByPrefix(bucketName, fileFetchSize, bucketPrefix, bucketDelimiter);
+    files = filterMine(files, mySlot, totalSlots, chunkSize);
     if(files.length > 0) {
       await processFiles(files).catch(e => {
         console.log(e);

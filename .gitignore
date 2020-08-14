@@ -1,3 +1,5 @@
 node_modules
 application.properties
 gcloud-sa.json
+*.log
+sa-key.json
